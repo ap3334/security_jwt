@@ -1,6 +1,9 @@
 package com.example.security_jwt.util;
 
+import com.example.security_jwt.AppConfig;
 import com.example.security_jwt.base.dto.RsData;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +12,32 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class Util {
+
+    private static ObjectMapper getObjectMapper() {
+        return (ObjectMapper) AppConfig.getContext().getBean("objectMapper");
+    }
+
+    public static class json {
+
+        public static Object toStr(Map<String, Object> map) {
+            try {
+                return getObjectMapper().writeValueAsString(map);
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        public static Map<String, Object> toMap(String jsonStr) {
+            try {
+                return getObjectMapper().readValue(jsonStr, LinkedHashMap.class);
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+    }
 
     public static <K, V> Map<K, V> mapOf(Object... args) {
         Map<K, V> map = new LinkedHashMap<>();
